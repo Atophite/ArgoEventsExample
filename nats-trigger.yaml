@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: nats
+spec:
+  dependencies:
+    - name: dep
+      eventSourceName: calendar
+      eventName: example-with-interval
+  triggers:
+    - template:
+        name: nats-trigger
+        nats: 
+          url: nats.nats:4222
+          subject: test
+          payload: 
+            - src:
+                dependencyName: dep
+                value: 'test'
+              dest: text
+      atLeastOnce: false
+      retryStrategy:
+        steps: 5
+        duration: 10s

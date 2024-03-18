@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: slack
+spec:
+  dependencies:
+    - name: dep
+      eventSourceName: calendar
+      eventName: example-with-schedule
+  triggers:
+    - template:
+        name: slack-trigger
+        slack:
+          slackToken:
+            key: token
+            name: slack-secret
+          channel: test
+          message: "Dit is een ingehaalde scheduled taak"
